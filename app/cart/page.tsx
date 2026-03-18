@@ -5,13 +5,28 @@ import Link from 'next/link';
 import { useCart } from "../context/CartContext";
 
 export default function CartPage() {
+
+  interface itemColor {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    qty: number;
+  }
+
+  interface DiscountDetail {
+    discount_p: number;
+    total_price: number;
+    discount: number;
+  }
+
   // const [cart, setCart] = useState([]);
   const [coupon, setCoupon] = useState("");
   const [totlalFirst, setTotlalFirst] = useState(0);
   const [totalAfterDiscount, setTotalAfterDiscount] = useState(0);
   // const [totalAfterMemberCode, setTotalAfterMemberCode] = useState(0);
   const [totalFinal, setTotalFinal] = useState(0);
-  const [discountItem, setDiscountItem] = useState([]);
+  const [discountItem, setDiscountItem] = useState<Record<string, DiscountDetail>>({});
   const [discountItemTotal, setDiscountItemTotal] = useState(0);
   const [discountMember, setDiscountMember] = useState(0);
   // const [discount, setDiscount] = useState(0);
@@ -27,9 +42,10 @@ export default function CartPage() {
     processMoney('');
   }, []);
 
-  const processMoney = async (type) => {
-    const saved = localStorage.getItem("aroy-lerd-cart");
-    let cart_items = JSON.parse(saved);
+  const processMoney = async (type:String) => {
+    const saved = localStorage.getItem("aroy-lerd-cart") || "[]";
+    // console.log(saved);
+    let cart_items = JSON.parse(saved) as itemColor[];
     // console.log(cart_items);
     if( cart_items.length>0 ){
       let datas = {
@@ -78,7 +94,7 @@ export default function CartPage() {
       // setTotalAfterMemberCode(data.total_after_member_code);
       setTotalFinal(0);
 
-      setDiscountItem([]);
+      setDiscountItem({});
     }
   };
 
@@ -87,20 +103,20 @@ export default function CartPage() {
     processMoney('applymember');
   };
 
-  const handleUpdateQty = async (item_id, item_qty) => {
+  const handleUpdateQty = async (item_id:number, item_qty:number) => {
     await updateQty(item_id, item_qty);
     processMoney('');
   }
 
-  const handleRemoveItem = async (item_id) => {
+  const handleRemoveItem = async (item_id:number) => {
     await removeItem(item_id);
     processMoney('');
   }
 
   const handleOrder = async () => 
   {
-    const saved = localStorage.getItem("aroy-lerd-cart");
-    let cart_items = JSON.parse(saved);
+    const saved = localStorage.getItem("aroy-lerd-cart") || "[]";
+    let cart_items = JSON.parse(saved) as itemColor[];
     // console.log(cart_items);
       let datas = {
         cart_items: cart_items,
@@ -186,7 +202,7 @@ export default function CartPage() {
               <Link href="/" className="bg-orange-500 text-white px-8 py-3 rounded-xl font-bold">ไปเลือกเมนูอร่อย</Link>
             </div>
           ) : (
-            cart.map((item) => (
+            cart.map((item: itemColor) => (
               <div key={item.id} className="bg-white p-4 rounded-3xl shadow-sm border border-neutral-100 flex gap-4 items-center">
                 <img src={item.image} className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover" alt="" />
                 <div className="flex-grow">

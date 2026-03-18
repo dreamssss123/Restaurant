@@ -5,27 +5,38 @@ import { useRouter } from 'next/navigation'
 import { useCart } from "./context/CartContext";
 // import Link from 'next/link'
 
-export default function HomeClient({ initialItems }) {
+interface itemColor {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+    qty: number;
+}
+interface HomeClientProps {
+  initialItems: itemColor[];
+}
+
+export default function HomeClient({ initialItems }: HomeClientProps) {
 
   const [menuItems, setItems] = useState(initialItems);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState<itemColor | null>(null);
   const [quantity, setQuantity] = useState(1);
 
-  const openModal = (item) => {
+  const openModal = (item: itemColor) => {
     setSelectedItem(item);
     setQuantity(1);
     setIsModalOpen(true);
   };
 
   const { addToCart } = useCart();
-  const handleConfirmAdd = () => {
+  const handleConfirmAdd = (selectedItem:itemColor, quantity:number) => {
     addToCart(selectedItem, quantity);
     setIsModalOpen(false); 
   };
 
   const router = useRouter()
-  const handleConfirmOrder = async () => {
+  const handleConfirmOrder = async (selectedItem:itemColor, quantity:number) => {
     await addToCart(selectedItem, quantity);
     router.push('/cart')
   };
@@ -96,11 +107,15 @@ export default function HomeClient({ initialItems }) {
 
               <div className="flex justify-between items-center mb-6">
                 <span className="text-neutral-400 font-medium">ยอดรวม</span>
-                <span className="text-3xl font-black text-neutral-900">{(selectedItem?.price * quantity).toLocaleString()}.-</span>
+                <span className="text-3xl font-black text-neutral-900">{((selectedItem?.price ?? 0) * quantity).toLocaleString()}.-</span>
               </div>
 
               <button 
-                onClick={() => handleConfirmAdd(selectedItem, quantity)}
+                onClick={() => {
+                  if(selectedItem){
+                    handleConfirmAdd(selectedItem, quantity)
+                  }
+                }}
                 className="w-full py-5 bg-orange-500 hover:bg-orange-600 text-white rounded-[1.5rem] font-black text-lg shadow-xl shadow-orange-200 transition-all active:scale-95 flex items-center justify-center gap-3 mb-3"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
@@ -108,7 +123,11 @@ export default function HomeClient({ initialItems }) {
               </button>
 
               <button 
-                onClick={() => handleConfirmOrder(selectedItem, quantity)}
+                onClick={() => {
+                  if(selectedItem){
+                    handleConfirmOrder(selectedItem, quantity)
+                  }
+                }}
                 className="w-full py-5 bg-red-500 hover:bg-red-600 text-white rounded-[1.5rem] font-black text-lg shadow-xl shadow-orange-200 transition-all active:scale-95 flex items-center justify-center gap-3"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

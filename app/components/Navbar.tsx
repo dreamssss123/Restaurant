@@ -6,10 +6,18 @@ import { useCart } from "../context/CartContext";
 
 export default function Navbar() {
 
+    interface itemColor {
+        id: number;
+        name: string;
+        price: number;
+        image: string;
+        qty: number;
+    }
+
     const { cart, clearCart } = useCart();
     // console.log(cart.length);
 
-    const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+    const totalItems = cart.reduce((sum:number, item:itemColor) => sum + item.qty, 0);
     // console.log(totalItems);
 
     return (

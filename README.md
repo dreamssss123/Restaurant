@@ -1,3 +1,9 @@
+นี่คือโปรเจคร้านอาหารร้าน AroyLerd เอาไว้ใช้สำหรับส่งงานTest เท่านั้นครับ
+
+## Getting Started
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

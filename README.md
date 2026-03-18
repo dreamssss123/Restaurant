@@ -7,6 +7,8 @@
 2. พิมพ์คำสั่ง npm install
 3. พิมพ์คำสั่ง npm run dev
 *** หลังจากนี้ให้Cloneและติดตั้ง Backend ด้วยครับ ระบบจึงจะทำงานได้ ***
+
+<br><br>
  
 
 ## Getting Started
